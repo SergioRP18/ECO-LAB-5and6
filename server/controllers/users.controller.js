@@ -1,22 +1,19 @@
-const { getAllProducts, getAllUsers, getAllOrders, getAllPost, getFirst10Products, getProductsByCurrentUser} = require("../db/users.db");
+const { getAllProducts, getAllUsers, getAllOrders, getAllPost, getFirst10Products, getProductsByCurrentUser, } = require("../db/users.db"); // Importa solo lo necesario
 
-const fetchAllProducts = async (req, res) => {
-  try {
-    const products = await getAllProducts();
-    res.json(products);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to fetch products" });
-  }
+const getProducts = async (req, res) => {
+  const users = await getAllProducts();
+  res.send(users);
 };
 
-const fetchProductsByPrice = async (req, res) => {
-  try {
-    const products = await getAllProducts();
-    const filteredProducts = products.filter((product) => product.price < 50);
-    res.json(filteredProducts);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to fetch products by price" });
-  }
+const getPrice = async (req, res) => {
+    try {
+        const products = await getAllProducts();
+        const filteredProducts = products.filter((product) => product.price < 50);
+        res.json(filteredProducts);
+    } catch (error) {
+        console.error("Error fetching products by price:", error);
+        res.status(500).json({ error: "Failed to fetch products by price" });
+    }
 };
 
 const getUsers = async (req, res) => {
@@ -70,21 +67,31 @@ const getFirstProducts = async (req, res) => {
 };
 
 const getProductsUser = async (req, res) => {
-  const userId = req.query.user_id;
+    const userId = req.query.user_id;
 
-  if (!userId) {
-    return res.status(400).json({ error: "Falta el user_id" });
-  }
+    if (!userId) {
+        return res.status(400).json({ error: "Falta el user_id" });
+    }
 
-  const data = await getProductsByCurrentUser(userId);
-  res.json(data);
+    try {
+        const { data, error } = await supabaseClient
+            .from("products")
+            .select("*")
+            .eq("user_id", userId);
+
+        if (error) throw error;
+        res.json(data);
+    } catch (error) {
+        console.error("Error fetching products by user:", error);
+        res.status(500).json({ error: "Failed to fetch products by user" });
+    }
 };
 
 
 module.exports = {
-  fetchAllProducts,
+  getProducts,
   getUsers,
-  fetchProductsByPrice,
+  getPrice,
   getUserEmail,
   getOrderCreateAt,
   getProductsMulti,

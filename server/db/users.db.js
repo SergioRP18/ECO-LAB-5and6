@@ -1,85 +1,76 @@
-const supabaseClient = require("../services/supabase.service");
+const supabaseCli = require("../services/supabase.service");
 
-const fetchAllProducts = async () => {
-  try {
-    const { data, error } = await supabaseClient.from("products").select();
-    if (error) throw error;
-    return data;
-  } catch (error) {
-    console.error("Error fetching products:", error);
-    throw error;
+const getAllProducts = async () => {
+  const { data, error } = await supabaseCli.from("products").select();
+  if (error) {
+    console.error(error);
+    return error;
   }
+  return data;
 };
 
-const fetchFirst10Products = async () => {
-  try {
-    const { data, error } = await supabaseClient.from("products").select().limit(10);
-    if (error) throw error;
-    return data;
-  } catch (error) {
-    console.error("Error fetching first 10 products:", error);
-    throw error;
+const getFirst10Products = async () => {
+  const { data, error } = await supabaseCli.from("products").select().limit(10);
+
+  if (error) {
+    console.error(error);
+    return error;
   }
+  return data;
 };
 
-const fetchAllUsers = async () => {
-  try {
-    const { data, error } = await supabaseClient.from("users").select();
-    if (error) throw error;
-    return data;
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    throw error;
+const getAllUsers = async () => {
+  const { data, error } = await supabaseCli.from("users").select();
+  if (error) {
+    console.error(error);
+    return error;
   }
+  return data;
 };
 
-const fetchAllOrders = async () => {
-  try {
-    const { data, error } = await supabaseClient
-      .from("orders")
-      .select()
-      .order("created_at", { ascending: false });
-    if (error) throw error;
-    return data;
-  } catch (error) {
-    console.error("Error fetching orders:", error);
-    throw error;
+const getAllOrders = async () => {
+  const { data, error } = await supabaseCli
+    .from("orders")
+    .select()
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+    return error;
   }
+  return data;
 };
 
-const fetchAllPost = async () => {
-  try {
-    const { data, error } = await supabaseClient
-      .from("posts")
-      .select("title")
-      .ilike("title", "%tutorial%");
-    if (error) throw error;
-    return data;
-  } catch (error) {
-    console.error("Error fetching posts:", error);
-    throw error;
+const getAllPost = async () => {
+  const { data, error } = await supabaseCli
+    .from("posts")
+    .select("title")
+    .ilike("title", "%tutorial%");
+  if (error) {
+    console.error(error);
+    return error;
   }
+  return data;
 };
 
-const fetchProductsByCurrentUser = async (userId) => {
-  try {
-    const { data, error } = await supabaseClient
-      .from("products")
-      .select()
-      .eq("user_id", userId);
-    if (error) throw error;
-    return data;
-  } catch (error) {
-    console.error("Error fetching products by current user:", error);
-    throw error;
+const getProductsByCurrentUser = async (userId) => {
+  const { data, error } = await supabaseCli
+    .from("products")
+    .select()
+    .eq("user_id", userId);
+
+  if (error) {
+    console.error(error);
+    return error;
   }
+  return data;
 };
 
 module.exports = {
-  fetchAllProducts,
-  fetchAllUsers,
-  fetchAllOrders,
-  fetchAllPost,
-  fetchFirst10Products,
-  fetchProductsByCurrentUser,
+  getAllProducts,
+  getAllUsers,
+  getAllOrders,
+  getAllPost,
+  getFirst10Products,
+  getProductsByCurrentUser,
 };

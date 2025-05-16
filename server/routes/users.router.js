@@ -12,5 +12,4 @@ router.get("/post/tutorial", getPostWord);
 router.get("/products/first10products", getFirstProducts);
 router.get("/products/by-user", getProductsUser);
 
-
 module.exports = router;
