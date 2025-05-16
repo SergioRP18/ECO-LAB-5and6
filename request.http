@@ -1,0 +1,17 @@
+GET http://localhost:5050/products
+
+GET http://localhost:5050/products/price
+
+GET http://localhost:5050/users
+
+GET http://localhost:5050/users/email-username
+
+GET http://localhost:5050/orders
+
+GET http://localhost:5050/product/price-category
+
+GET http://localhost:5050/post/tutorial
+
+GET http://localhost:5050/products/first10products
+
+GET http://localhost:5050/products/by-user?user_id=5aa70cb7-c0ee-483b-a95d-8526d154a8a0

@@ -1,28 +1,27 @@
 const express = require("express");
-const app = express();
-const http = require("http").createServer(app);
-const io = require("socket.io")(http);
-const productsRouter = require("./server/routes/products.router");
+const path = require("path");
+const { createServer } = require("http");
+
 const usersRouter = require("./server/routes/users.router");
+const { initSocketInstance } = require("./server/services/socket.service");
 
+const PORT = process.env.PORT || 5050;
+
+const app = express();
+const httpServer = createServer(app);
+
+// Middlewares
 app.use(express.json());
-app.use(express.static("public"));
+app.use("/app1", express.static(path.join(__dirname, "app1")));
+app.use("/app2", express.static(path.join(__dirname, "app2")));
 
-// Rutas
-app.use("/products", productsRouter);
-app.use("/users", usersRouter);
+// Routes
+app.use("/", usersRouter);
 
-// Socket.IO
-io.on("connection", (socket) => {
-  console.log("Usuario conectado");
+// Initialize Socket.IO
+initSocketInstance(httpServer);
 
-  socket.on("screenChange", (data) => {
-    console.log("Cambio de pantalla:", data);
-    socket.broadcast.emit("screenChange", data);
-  });
-});
-
-const PORT = 5050;
-http.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
+// Start server
+httpServer.listen(PORT, () =>
+  console.log(`Server running at http://localhost:${PORT}`)
+);
